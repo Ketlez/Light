@@ -16,7 +16,7 @@ ModelCube::Model::~Model()
 }
 
 
-void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, const float deltaTime)
+void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, const float deltaTime)
 {
 	m_shader.use();
 	m_vao.bind();
@@ -24,6 +24,8 @@ void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, gl
 	m_shader.setMatrix("view", viewMatrix);
 	m_shader.setMatrix("projection", projectionMatrix);
 	m_shader.setMatrix("model", model);
+
+	m_shader.setVec3("lightColor", lightColor);
 
 
 	drawStatic();

@@ -50,7 +50,7 @@ public:
 	Model(const ColorScheme& colorSceme);
 	~Model();
 	std::array<float, 5832> vertices;
-	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, const float deltaTime);
+	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, const float deltaTime);
 private:
 	void drawStatic();
 	Shader m_shader;

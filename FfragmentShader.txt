@@ -4,7 +4,7 @@ in vec3 ColorCub;
 in vec4 Pos;
 
 uniform float time;
-
+uniform vec3 lightColor;
 
 
 void main()
@@ -18,7 +18,7 @@ void main()
    
 
   if((abs(Pos.x)>=0.45&&abs(Pos.x)<0.55||abs(Pos.y)>=0.45&&abs(Pos.y)<0.55||abs(Pos.z)>=0.45&&abs(Pos.z)<0.55)||(abs(Pos.x)+abs(Pos.y)>=2.9||abs(Pos.x)+abs(Pos.z)>=2.9||abs(Pos.z)+abs(Pos.y)>=2.9))
-  FragColor = vec4(0,0,0,1);
+  FragColor = vec4(vec3(0,0,0)*lightColor,1);
   else
-  FragColor = vec4(ColorCub, 1);
+  FragColor = vec4(ColorCub*lightColor, 1);
 }

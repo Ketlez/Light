@@ -143,6 +143,9 @@ void Application::launchApp()
     //RubiksCube::ColorScheme Scheme;
     //RubiksCube::Model cube(RubiksCube::ColorScheme());
     ModelCube::Model cube(ModelCube::ColorScheme::Classic);
+    LightCubeModel::LightModel lightCube;
+
+    glm::vec3 lightColor(1.f, 1.f, 1.f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -160,11 +163,22 @@ void Application::launchApp()
         if (h == 0)
             h = 1;
 
+
+
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)(h), 0.01f, 100.0f);
         glm::mat4 model = glm::mat4(1.0f);
 
-        cube.draw(view, projection, model, deltaTime);
+        cube.draw(view, projection, model, lightColor, deltaTime);
+
+        glm::mat4 lightModel = glm::mat4(1.0f);
+        lightModel = glm::rotate(lightModel, float(glfwGetTime()), glm::vec3(0, 1, 0));
+        lightModel = glm::translate(lightModel, glm::vec3(5, 0, 0));
+        lightModel = glm::scale(lightModel, glm::vec3(0.5, 0.5, 0.5));
+        
+
+        lightCube.draw(view, projection, lightModel, lightColor, deltaTime);
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
