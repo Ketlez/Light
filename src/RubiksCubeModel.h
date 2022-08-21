@@ -8,6 +8,7 @@
 
 #include <array>
 #include <tuple>
+#include "LightModel.h"
 struct Color
 {
 	unsigned char R;
@@ -50,7 +51,7 @@ public:
 	Model(const ColorScheme& colorSceme);
 	~Model();
 	std::array<float, 8748> vertices;
-	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 cameraPos, const float deltaTime);
+	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, LightCubeModel::LightModel& lightModel, const float deltaTime);
 private:
 	void drawStatic();
 	Shader m_shader;

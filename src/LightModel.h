@@ -14,8 +14,14 @@ public:
 	~LightModel();
 	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, const float deltaTime);
 	std::array<float, 108> vertices;
-	glm::vec3 lightPos;
-	glm::vec3 lightColor;
+	glm::vec3 color = glm::vec3(1.f, 1.f, 1.f);
+	glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
+	glm::vec3 cameraPos = glm::vec3(0.f, 0.f, 0.f);
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular = glm::vec3(1.f);
+	void updataPhong();
+
 private:
 	Shader l_shader;
 	VAO l_vao;

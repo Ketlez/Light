@@ -143,9 +143,9 @@ void Application::launchApp()
     //RubiksCube::ColorScheme Scheme;
     //RubiksCube::Model cube(RubiksCube::ColorScheme());
     ModelCube::Model cube(ModelCube::ColorScheme::Classic);
-    LightCubeModel::LightModel lightCube(glm::vec3(1.f, 1.f, 1.f));
+    LightCubeModel::LightModel lightCube(glm::vec3(1.0f));
 
-    glm::vec3 lightPos(2.5f, 0.f, 0.f);
+    glm::vec3 lightPos(5.5f, 0.f, 0.f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -177,7 +177,8 @@ void Application::launchApp()
         //lightCube.lightColor.x = sin(glfwGetTime());
         //lightCube.lightColor.z = 1-sin(glfwGetTime());
         //lightCube.lightColor.y = cos(glfwGetTime());
-
+        lightCube.cameraPos = camera.Position;
+        lightCube.pos = lightPosRotate;
 
         lightCube.draw(view, projection, lightModel, deltaTime);
 
@@ -185,7 +186,7 @@ void Application::launchApp()
         glm::mat4 model = glm::mat4(1.0f);
         //model = glm::rotate(model, float(glfwGetTime()), glm::vec3(0, 1, 0));
 
-        cube.draw(view, projection, model, lightCube.lightColor, lightPosRotate, camera.Position, deltaTime);
+        cube.draw(view, projection, model, lightCube, deltaTime);
 
         
 

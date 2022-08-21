@@ -17,7 +17,7 @@ ModelCube::Model::~Model()
 }
 
 
-void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 cameraPos, const float deltaTime)
+void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, LightCubeModel::LightModel& lightModel, const float deltaTime)
 {
 	m_shader.use();
 	m_vao.bind();
@@ -29,10 +29,12 @@ void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, gl
 	glm::mat3 Normal = glm::mat3(transpose(inverse(model)));
 	m_shader.setMatrix3("normalModel", Normal);
 
-
-	m_shader.setVec3("lightColor", lightColor);
-	m_shader.setVec3("viewPos", cameraPos);
-	m_shader.setVec3("lightPos", lightPos);
+	lightModel.updataPhong();
+	m_shader.setVec3("light.ambient", lightModel.ambient);
+	m_shader.setVec3("light.diffuse", lightModel.diffuse);
+	m_shader.setVec3("light.specular", lightModel.specular);
+	m_shader.setVec3("light.position", lightModel.pos);
+	m_shader.setVec3("light.cameraPos", lightModel.cameraPos);
 
 
 	drawStatic();

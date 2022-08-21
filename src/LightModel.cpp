@@ -1,8 +1,8 @@
 #include "LightModel.h"
 
-LightCubeModel::LightModel::LightModel(glm::vec3 lightColor): l_shader("LightVertexShader.txt", "LightFragmentShader.txt"), lightPos(0.f, 0.f, 0.f)
+LightCubeModel::LightModel::LightModel(glm::vec3 lightColor): l_shader("LightVertexShader.txt", "LightFragmentShader.txt")
 {
-	this->lightColor = lightColor;
+	this->color = lightColor;
 
 	vertices = {
 		-0.5f, -0.5f, -0.5f,
@@ -67,8 +67,14 @@ void LightCubeModel::LightModel::draw(glm::mat4 viewMatrix, glm::mat4 projection
 	l_shader.setMatrix4("projection", projectionMatrix);
 	l_shader.setMatrix4("model", model);
 
-	l_shader.setVec3("lightColor", lightColor);
+	l_shader.setVec3("lightColor", color);
 
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void LightCubeModel::LightModel::updataPhong()
+{
+	diffuse = color * glm::vec3(1.f);
+	ambient = diffuse * glm::vec3(0.2f);
 }
