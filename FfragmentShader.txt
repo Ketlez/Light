@@ -1,24 +1,46 @@
 #version 330 core
 out vec4 FragColor;
+
 in vec3 ColorCub;
 in vec4 Pos;
+in vec3 FragPos;  
+in vec3 Normal;
 
 uniform float time;
 uniform vec3 lightColor;
+uniform vec3 ambientlightColor;
+uniform vec3 lightPos;
+uniform vec3 viewPos;
 
+vec3 resultLight()
+{
+	float ambientStrength = 0.1f;
+	vec3 ambient = ambientStrength * lightColor;
+
+	vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(lightPos - FragPos);  
+	float diff = max(dot(norm, lightDir), 0.0);
+	vec3 diffuse = diff * lightColor;
+
+	float specularStrength = 0.5;
+	vec3 viewDir = normalize(viewPos - FragPos);
+	vec3 reflectDir = reflect(-lightDir, norm);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+	vec3 specular = specularStrength * spec * lightColor;  
+
+	vec3 resultColor = ambient + diffuse + specular;
+
+	return resultColor;
+}
 
 void main()
 {
-	float temp = mod(time, 4);
-	if(temp>2)
-	temp=4-temp;
-	float red = (Pos.y-0.5)+temp;
-	vec4 color= vec4(red, 0, 0, 1);
-   
-   
+	vec3 light = resultLight();
+	
+	
 
-  if((abs(Pos.x)>=0.45&&abs(Pos.x)<0.55||abs(Pos.y)>=0.45&&abs(Pos.y)<0.55||abs(Pos.z)>=0.45&&abs(Pos.z)<0.55)||(abs(Pos.x)+abs(Pos.y)>=2.9||abs(Pos.x)+abs(Pos.z)>=2.9||abs(Pos.z)+abs(Pos.y)>=2.9))
-  FragColor = vec4(vec3(0,0,0)*lightColor,1);
-  else
-  FragColor = vec4(ColorCub*lightColor, 1);
+	if((abs(Pos.x)>=0.45&&abs(Pos.x)<0.55||abs(Pos.y)>=0.45&&abs(Pos.y)<0.55||abs(Pos.z)>=0.45&&abs(Pos.z)<0.55)||(abs(Pos.x)+abs(Pos.y)>=2.9||abs(Pos.x)+abs(Pos.z)>=2.9||abs(Pos.z)+abs(Pos.y)>=2.9))
+	FragColor = vec4(vec3(0.1,0.1,0.1)*light,1);
+	else
+	FragColor = vec4(ColorCub*light, 1);
 }

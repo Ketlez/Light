@@ -143,9 +143,9 @@ void Application::launchApp()
     //RubiksCube::ColorScheme Scheme;
     //RubiksCube::Model cube(RubiksCube::ColorScheme());
     ModelCube::Model cube(ModelCube::ColorScheme::Classic);
-    LightCubeModel::LightModel lightCube;
+    LightCubeModel::LightModel lightCube(glm::vec3(1.f, 1.f, 1.f));
 
-    glm::vec3 lightColor(1.f, 1.f, 1.f);
+    glm::vec3 lightPos(2.5f, 0.f, 0.f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -155,7 +155,7 @@ void Application::launchApp()
         processInput(window);
 
 
-        glClearColor(0.1f, 0.3f, 0.3f, 0.2f);
+        glClearColor(0.1f, 0.3f, 0.3f, 1.0f);
         //glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -164,20 +164,30 @@ void Application::launchApp()
             h = 1;
 
 
-
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)(h), 0.01f, 100.0f);
-        glm::mat4 model = glm::mat4(1.0f);
-
-        cube.draw(view, projection, model, lightColor, deltaTime);
+        //glm::mat4 projection = glm::mat4(1.0f);
 
         glm::mat4 lightModel = glm::mat4(1.0f);
-        lightModel = glm::rotate(lightModel, float(glfwGetTime()), glm::vec3(0, 1, 0));
-        lightModel = glm::translate(lightModel, glm::vec3(5, 0, 0));
+        lightModel = glm::rotate(lightModel, float(glfwGetTime())*2.f, glm::vec3(0, 1, 0));
+        glm::vec4 lightPosRotate = lightModel * glm::vec4(lightPos, 1.f);
+        lightModel = glm::translate(lightModel, lightPos);
         lightModel = glm::scale(lightModel, glm::vec3(0.5, 0.5, 0.5));
-        
 
-        lightCube.draw(view, projection, lightModel, lightColor, deltaTime);
+        //lightCube.lightColor.x = sin(glfwGetTime());
+        //lightCube.lightColor.z = 1-sin(glfwGetTime());
+        //lightCube.lightColor.y = cos(glfwGetTime());
+
+
+        lightCube.draw(view, projection, lightModel, deltaTime);
+
+        
+        glm::mat4 model = glm::mat4(1.0f);
+        //model = glm::rotate(model, float(glfwGetTime()), glm::vec3(0, 1, 0));
+
+        cube.draw(view, projection, model, lightCube.lightColor, lightPosRotate, camera.Position, deltaTime);
+
+        
 
 
         glfwSwapBuffers(window);

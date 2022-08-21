@@ -35,8 +35,8 @@ public:
 		Color left
 	);
 
-	std::array<float, 5832> createArray() const;
-	std::array<float, 5832> createArrayFromOneCube(const std::array<float, 216>& oneCubeVertices) const;
+	std::array<float, 8748> createArray() const;
+	std::array<float, 8748> createArrayFromOneCube(const std::array<float, 324>& oneCubeVertices) const;
 	std::array<Color, 6> asArray() const;
 
 	static ColorScheme Classic;
@@ -49,8 +49,8 @@ class Model
 public:
 	Model(const ColorScheme& colorSceme);
 	~Model();
-	std::array<float, 5832> vertices;
-	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, const float deltaTime);
+	std::array<float, 8748> vertices;
+	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 cameraPos, const float deltaTime);
 private:
 	void drawStatic();
 	Shader m_shader;

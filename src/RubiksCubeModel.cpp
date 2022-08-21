@@ -7,8 +7,9 @@ ModelCube::Model::Model(const ColorScheme& colorSceme)
 	m_vao.bind();
 	m_vbo.bind();
 	m_vbo.setData(vertices.data(), sizeof(float)*vertices.size());
-	m_vao.attribPointer(0, 3, GL_FLOAT, 6 * sizeof(float), 0);
-	m_vao.attribPointer(1, 3, GL_FLOAT, 6 * sizeof(float), 3 * sizeof(float));
+	m_vao.attribPointer(0, 3, GL_FLOAT, 9 * sizeof(float), 0);
+	m_vao.attribPointer(1, 3, GL_FLOAT, 9 * sizeof(float), 3 * sizeof(float));
+	m_vao.attribPointer(2, 3, GL_FLOAT, 9 * sizeof(float), 6 * sizeof(float));
 }
 
 ModelCube::Model::~Model()
@@ -16,16 +17,22 @@ ModelCube::Model::~Model()
 }
 
 
-void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, const float deltaTime)
+void ModelCube::Model::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 cameraPos, const float deltaTime)
 {
 	m_shader.use();
 	m_vao.bind();
 
-	m_shader.setMatrix("view", viewMatrix);
-	m_shader.setMatrix("projection", projectionMatrix);
-	m_shader.setMatrix("model", model);
+	m_shader.setMatrix4("view", viewMatrix);
+	m_shader.setMatrix4("projection", projectionMatrix);
+	m_shader.setMatrix4("model", model);
+
+	glm::mat3 Normal = glm::mat3(transpose(inverse(model)));
+	m_shader.setMatrix3("normalModel", Normal);
+
 
 	m_shader.setVec3("lightColor", lightColor);
+	m_shader.setVec3("viewPos", cameraPos);
+	m_shader.setVec3("lightPos", lightPos);
 
 
 	drawStatic();
@@ -44,50 +51,50 @@ ModelCube::ColorScheme::ColorScheme(Color front, Color up, Color back, Color dow
 }
 
 
-std::array<float, 5832> ModelCube::ColorScheme::createArray() const
+std::array<float, 8748> ModelCube::ColorScheme::createArray() const
 {
-	std::array<float, 216> verticesOneCube = {
-		-0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
-	   -0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
-	   -0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
+	std::array<float, 324> verticesOneCube = {
+		-0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,	 0.0f, 0.0f, -1.0f,
+		0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,	 0.0f, 0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,	 0.0f, 0.0f, -1.0f,
+	   -0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,	 0.0f, 0.0f, -1.0f,
+	   -0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,	 0.0f, 0.0f, -1.0f,
 
-	   -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,
-	   -0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,
-	   -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.0f,
+	   -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+		0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.0f,	 0.0f, -1.0f, 0.0f,
+		0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,	 0.0f, -1.0f, 0.0f,
+		0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,	 0.0f, -1.0f, 0.0f,
+	   -0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,	 0.0f, -1.0f, 0.0f,
+	   -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.0f,	 0.0f, -1.0f, 0.0f,
 
-	   -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
-	   -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
+	   -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
+	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
+	   -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
 
-	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
-	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,
-	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,
-	   -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
-	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
+	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,	 -1.0f, 0.0f, 0.0f,
+	   -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,	 -1.0f, 0.0f, 0.0f,
+	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,	 -1.0f, 0.0f, 0.0f,
+	   -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,	 -1.0f, 0.0f, 0.0f,
+	   -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 1.0f,	 -1.0f, 0.0f, 0.0f,
+	   -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,	 -1.0f, 0.0f, 0.0f,
 
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,	 1.0f, 0.0f, 0.0f,
 
-		0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,
-	   -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,
-	   -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,
-	   -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,	 0.0f, 1.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,	 0.0f, 1.0f, 0.0f,
+	   -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,	 0.0f, 1.0f, 0.0f,
+	   -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,	 0.0f, 1.0f, 0.0f,
+	   -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,	 0.0f, 1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,	 0.0f, 1.0f, 0.0f,
 	};
 
 	std::array<Color, 6> colorsArray = asArray();
@@ -97,18 +104,18 @@ std::array<float, 5832> ModelCube::ColorScheme::createArray() const
 		auto [R, G, B] = colorsArray[i].toFloat();
 		for (int j = 0; j < 6; j++)
 		{
-			verticesOneCube[i * 36 + j*6 + 3] = R;
-			verticesOneCube[i * 36 + j*6 + 4] = G;
-			verticesOneCube[i * 36 + j*6 + 5] = B;
+			verticesOneCube[i * 54 + j*9 + 3] = R;
+			verticesOneCube[i * 54 + j*9 + 4] = G;
+			verticesOneCube[i * 54 + j*9 + 5] = B;
 		}
 	}
 
 	return createArrayFromOneCube(verticesOneCube);
 }
 
-std::array<float, 5832> ModelCube::ColorScheme::createArrayFromOneCube(const std::array<float, 216>& oneCubeVertices) const
+std::array<float, 8748> ModelCube::ColorScheme::createArrayFromOneCube(const std::array<float, 324>& oneCubeVertices) const
 {
-	std::array<float, 5832> resultCube;
+	std::array<float, 8748> resultCube;
 	int c = 0;
 	for (int x = 0; x < 3; x++) {
 		for (int y = 0; y < 3; y++) {
@@ -116,14 +123,14 @@ std::array<float, 5832> ModelCube::ColorScheme::createArrayFromOneCube(const std
 				for (int i = 0; i < 36; i++)
 				{
 
-					resultCube[c++] = oneCubeVertices[i * 6 + 0] + (x - 1);
-					resultCube[c++] = oneCubeVertices[i * 6 + 1] + (y - 1);
-					resultCube[c++] = oneCubeVertices[i * 6 + 2] + (z - 1);
+					resultCube[c++] = oneCubeVertices[i * 9 + 0] + (x - 1);
+					resultCube[c++] = oneCubeVertices[i * 9 + 1] + (y - 1);
+					resultCube[c++] = oneCubeVertices[i * 9 + 2] + (z - 1);
 
-					for (int k = 0; k < 3; k++)
+					for (int k = 0; k < 6; k++)
 					{
 
-						resultCube[c++] = oneCubeVertices[i * 6 + 3 + k];
+						resultCube[c++] = oneCubeVertices[i * 9 + 3 + k];
 					}
 				}
 			}

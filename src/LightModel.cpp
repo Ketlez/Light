@@ -1,7 +1,9 @@
 #include "LightModel.h"
 
-LightCubeModel::LightModel::LightModel(): l_shader("LightVertexShader.txt", "LightFragmentShader.txt")
+LightCubeModel::LightModel::LightModel(glm::vec3 lightColor): l_shader("LightVertexShader.txt", "LightFragmentShader.txt"), lightPos(0.f, 0.f, 0.f)
 {
+	this->lightColor = lightColor;
+
 	vertices = {
 		-0.5f, -0.5f, -0.5f,
 		0.5f,  0.5f, -0.5f,
@@ -55,14 +57,15 @@ LightCubeModel::LightModel::~LightModel()
 {
 }
 
-void LightCubeModel::LightModel::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, glm::vec3 lightColor, const float deltaTime)
+void LightCubeModel::LightModel::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, const float deltaTime)
 {
 	l_shader.use();
 	l_vao.bind();
 
-	l_shader.setMatrix("view", viewMatrix);
-	l_shader.setMatrix("projection", projectionMatrix);
-	l_shader.setMatrix("model", model);
+
+	l_shader.setMatrix4("view", viewMatrix);
+	l_shader.setMatrix4("projection", projectionMatrix);
+	l_shader.setMatrix4("model", model);
 
 	l_shader.setVec3("lightColor", lightColor);
 
