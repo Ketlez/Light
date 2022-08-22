@@ -30,7 +30,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\RubiksCubeModel.cpp">
+    <ClCompile Include="src\BoxModel.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader.cpp">
@@ -62,7 +62,7 @@
     <ClInclude Include="src\GL_init.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\RubiksCubeModel.h">
+    <ClInclude Include="src\BoxModel.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\Shader.h">
@@ -92,6 +92,12 @@
       <Filter>Файлы ресурсов</Filter>
     </Image>
     <Image Include="texture\TextureBasik2.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="texture\container2.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="texture\container2_specular.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>

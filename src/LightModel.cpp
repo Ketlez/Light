@@ -75,6 +75,7 @@ void LightCubeModel::LightModel::draw(glm::mat4 viewMatrix, glm::mat4 projection
 
 void LightCubeModel::LightModel::updataPhong()
 {
-	diffuse = color * glm::vec3(1.f);
+	diffuse = color * glm::vec3(0.5f);
 	ambient = diffuse * glm::vec3(0.2f);
+	specular = color;
 }

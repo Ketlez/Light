@@ -2,7 +2,7 @@
 #include "GL_init.h"
 
 
-#include "stb_image.h"
+
 
 #include "Camera.h"
 
@@ -17,7 +17,7 @@
 
 #include <ctime>
 
-#include "RubiksCubeModel.h"
+#include "BoxModel.h"
 #include "LightModel.h"
 
 class Application

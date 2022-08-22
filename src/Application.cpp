@@ -142,10 +142,10 @@ void Application::launchApp()
 
     //RubiksCube::ColorScheme Scheme;
     //RubiksCube::Model cube(RubiksCube::ColorScheme());
-    ModelCube::Model cube(ModelCube::ColorScheme::Classic);
+    ModelCube::Model cube;
     LightCubeModel::LightModel lightCube(glm::vec3(1.0f));
 
-    glm::vec3 lightPos(5.5f, 0.f, 0.f);
+    glm::vec3 lightPos(5.5f, 5.5f, 5.5f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -169,7 +169,7 @@ void Application::launchApp()
         //glm::mat4 projection = glm::mat4(1.0f);
 
         glm::mat4 lightModel = glm::mat4(1.0f);
-        lightModel = glm::rotate(lightModel, float(glfwGetTime())*2.f, glm::vec3(0, 1, 0));
+        //lightModel = glm::rotate(lightModel, float(glfwGetTime())*2.f, glm::vec3(0, 1, 0));
         glm::vec4 lightPosRotate = lightModel * glm::vec4(lightPos, 1.f);
         lightModel = glm::translate(lightModel, lightPos);
         lightModel = glm::scale(lightModel, glm::vec3(0.5, 0.5, 0.5));
@@ -184,9 +184,10 @@ void Application::launchApp()
 
         
         glm::mat4 model = glm::mat4(1.0f);
-        //model = glm::rotate(model, float(glfwGetTime()), glm::vec3(0, 1, 0));
+        model = glm::scale(model, glm::vec3(4.f, 4.f, 4.f));
+        model = glm::rotate(model, float(glfwGetTime()/2.f), glm::vec3(-1, 1, 0));
 
-        cube.draw(view, projection, model, lightCube, deltaTime);
+        cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
 
         
 

@@ -147,7 +147,7 @@
     <ClCompile Include="src\GL_init.cpp" />
     <ClCompile Include="src\LightModel.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\RubiksCubeModel.cpp" />
+    <ClCompile Include="src\BoxModel.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\VAO.cpp" />
@@ -159,7 +159,7 @@
     <ClInclude Include="src\EBO.h" />
     <ClInclude Include="src\GL_init.h" />
     <ClInclude Include="src\LightModel.h" />
-    <ClInclude Include="src\RubiksCubeModel.h" />
+    <ClInclude Include="src\BoxModel.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.h" />
@@ -167,6 +167,8 @@
     <ClInclude Include="src\VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="texture\container2.png" />
+    <Image Include="texture\container2_specular.png" />
     <Image Include="texture\d848b4d0b5e21b0869d32f22c2ec8cd1.jpg" />
     <Image Include="texture\TextureBasik.jpg" />
     <Image Include="texture\TextureBasik2.jpg" />
