@@ -7,7 +7,6 @@
 #include "VBO.h"
 
 #include <array>
-#include <tuple>
 #include "LightModel.h"
 #include "Texture.h"
 

@@ -19,6 +19,7 @@
 
 #include "BoxModel.h"
 #include "LightModel.h"
+#include "Surface.h"
 
 class Application
 {

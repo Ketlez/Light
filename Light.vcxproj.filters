@@ -48,6 +48,9 @@
     <ClCompile Include="src\LightModel.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\Surface.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -83,6 +86,9 @@
     <ClInclude Include="src\LightModel.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="src\Surface.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="texture\d848b4d0b5e21b0869d32f22c2ec8cd1.jpg">
@@ -100,6 +106,12 @@
     <Image Include="texture\container2_specular.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="texture\surface.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="texture\pol.jpg">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitIgnore" />
@@ -109,5 +121,7 @@
     <Text Include="FvertexShader.txt" />
     <Text Include="LightFragmentShader.txt" />
     <Text Include="LightVertexShader.txt" />
+    <Text Include="SurfaceFragmentShader.txt" />
+    <Text Include="SurfaceVertexShader.txt" />
   </ItemGroup>
 </Project>

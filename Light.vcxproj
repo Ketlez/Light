@@ -149,6 +149,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\BoxModel.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Surface.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\VAO.cpp" />
     <ClCompile Include="src\VBO.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="src\BoxModel.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\stb_image.h" />
+    <ClInclude Include="src\Surface.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\VAO.h" />
     <ClInclude Include="src\VBO.h" />
@@ -170,6 +172,8 @@
     <Image Include="texture\container2.png" />
     <Image Include="texture\container2_specular.png" />
     <Image Include="texture\d848b4d0b5e21b0869d32f22c2ec8cd1.jpg" />
+    <Image Include="texture\pol.jpg" />
+    <Image Include="texture\surface.jpg" />
     <Image Include="texture\TextureBasik.jpg" />
     <Image Include="texture\TextureBasik2.jpg" />
   </ItemGroup>
@@ -181,6 +185,8 @@
     <Text Include="FvertexShader.txt" />
     <Text Include="LightFragmentShader.txt" />
     <Text Include="LightVertexShader.txt" />
+    <Text Include="SurfaceFragmentShader.txt" />
+    <Text Include="SurfaceVertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

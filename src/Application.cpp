@@ -143,6 +143,7 @@ void Application::launchApp()
     //RubiksCube::ColorScheme Scheme;
     //RubiksCube::Model cube(RubiksCube::ColorScheme());
     ModelCube::Model cube;
+    Surface surface;
     LightCubeModel::LightModel lightCube(glm::vec3(1.0f));
 
     glm::vec3 lightPos(5.5f, 5.5f, 5.5f);
@@ -172,11 +173,11 @@ void Application::launchApp()
         //lightModel = glm::rotate(lightModel, float(glfwGetTime())*2.f, glm::vec3(0, 1, 0));
         glm::vec4 lightPosRotate = lightModel * glm::vec4(lightPos, 1.f);
         lightModel = glm::translate(lightModel, lightPos);
-        lightModel = glm::scale(lightModel, glm::vec3(0.5, 0.5, 0.5));
+        lightModel = glm::scale(lightModel, glm::vec3(0.1, 0.1, 0.1));
 
-        //lightCube.lightColor.x = sin(glfwGetTime());
-        //lightCube.lightColor.z = 1-sin(glfwGetTime());
-        //lightCube.lightColor.y = cos(glfwGetTime());
+        //lightCube.color.x = sin(glfwGetTime());
+        //lightCube.color.z = 1-sin(glfwGetTime());
+        //lightCube.color.y = cos(glfwGetTime());
         lightCube.cameraPos = camera.Position;
         lightCube.pos = lightPosRotate;
 
@@ -184,12 +185,15 @@ void Application::launchApp()
 
         
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(4.f, 4.f, 4.f));
-        model = glm::rotate(model, float(glfwGetTime()/2.f), glm::vec3(-1, 1, 0));
+        model = glm::translate(model, glm::vec3(-2, 0, -2.5f));
 
+        model = glm::translate(model, glm::vec3(0, 1, 0));
         cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
-
         
+
+        glm::mat4 surfaceModel = glm::mat4(1.0f);
+        //surfaceModel = glm::scale(surfaceModel, glm::vec3(0.5f));
+        surface.draw(view, projection, surfaceModel, lightCube, float(glfwGetTime()));
 
 
         glfwSwapBuffers(window);
