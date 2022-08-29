@@ -18,35 +18,96 @@ Surface::~Surface()
 }
 
 
-void Surface::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, LightCubeModel::LightModel& lightModel, const float time)
+void Surface::draw(
+	glm::mat4 viewMatrix,
+	glm::mat4 projectionMatrix,
+	glm::mat4 model,
+	LightCubeModel::DirLightModel& Dirlight,
+	LightCubeModel::PointLightModel* Pointlight,
+	int numberPointLight,
+	LightCubeModel::SpotLightModel& Spotlight,
+	glm::vec3 cameraPos,
+	const float deltaTime
+)
 {
 	m_shader.use();
 	m_vao.bind();
 	texture.activeTexture(0);
 	texture.bind();
-
+	
 	m_shader.setInt("material.diffuse", 0);
 	m_shader.setFloat("material.shininess", 4);
-
-
-	m_shader.setFloat("time", time);
-
+	
+	
+	m_shader.setFloat("time", deltaTime);
+	
 	m_shader.setMatrix4("view", viewMatrix);
 	m_shader.setMatrix4("projection", projectionMatrix);
 	m_shader.setMatrix4("model", model);
-
+	
 	glm::mat3 Normal = glm::mat3(transpose(inverse(model)));
 	m_shader.setMatrix3("normalModel", Normal);
+	
+	// light settings
+	m_shader.setVec3("viewPos", cameraPos);
+	if (Dirlight.drawFlag)
+		bindDirlight(Dirlight);
 
-	lightModel.updataPhong();
-	m_shader.setVec3("light.ambient", lightModel.ambient);
-	m_shader.setVec3("light.diffuse", lightModel.diffuse);
-	m_shader.setVec3("light.specular", lightModel.specular);
-	m_shader.setVec3("light.position", lightModel.pos);
-	m_shader.setVec3("light.cameraPos", lightModel.cameraPos);
+	bindPointlight(Pointlight, numberPointLight);
+	if (Spotlight.drawFlag)
+		bindSpotlight(Spotlight);
 
 
 	drawStatic();
+}
+
+void Surface::bindDirlight(LightCubeModel::DirLightModel& Dirlight)
+{
+	Dirlight.updataPhong();
+	m_shader.setVec3("dirLight.direction", Dirlight.direction);
+
+	m_shader.setVec3("dirLight.ambient", Dirlight.ambient);
+	m_shader.setVec3("dirLight.diffuse", Dirlight.diffuse);
+	m_shader.setVec3("dirLight.specular", Dirlight.specular);
+
+	m_shader.setBool("dirLight.drawFlag", Dirlight.drawFlag);
+}
+
+void Surface::bindPointlight(LightCubeModel::PointLightModel* Pointlight, int numberPointLight)
+{
+	for (int i = 0; i < numberPointLight; i++) {
+		Pointlight[i].updataPhong();
+		m_shader.setVec3(std::string("pointLights[") + std::to_string(i) + std::string("].position"), Pointlight[i].pos);
+
+		m_shader.setVec3(std::string("pointLights[") + std::to_string(i) + std::string("].ambient"), Pointlight[i].ambient);
+		m_shader.setVec3(std::string("pointLights[") + std::to_string(i) + std::string("].diffuse"), Pointlight[i].diffuse);
+		m_shader.setVec3(std::string("pointLights[") + std::to_string(i) + std::string("].specular"), Pointlight[i].specular);
+
+		m_shader.setFloat(std::string("pointLights[") + std::to_string(i) + std::string("].constant"), Pointlight[i].constant);
+		m_shader.setFloat(std::string("pointLights[") + std::to_string(i) + std::string("].linear"), Pointlight[i].linear);
+		m_shader.setFloat(std::string("pointLights[") + std::to_string(i) + std::string("].quadratic"), Pointlight[i].quadratic);
+	}
+}
+
+void Surface::bindSpotlight(LightCubeModel::SpotLightModel& Spotlight)
+{
+	Spotlight.updataPhong();
+	m_shader.setVec3("spotLight.position", Spotlight.position);
+	m_shader.setVec3("spotLight.direction", Spotlight.direction);
+
+	m_shader.setVec3("spotLight.ambient", Spotlight.ambient);
+	m_shader.setVec3("spotLight.diffuse", Spotlight.diffuse);
+	m_shader.setVec3("spotLight.specular", Spotlight.specular);
+
+	m_shader.setFloat("spotLight.constant", Spotlight.constant);
+	m_shader.setFloat("spotLight.linear", Spotlight.linear);
+	m_shader.setFloat("spotLight.quadratic", Spotlight.quadratic);
+
+	m_shader.setFloat("spotLight.cutOff", Spotlight.cutOff);
+	m_shader.setFloat("spotLight.outerCutOff", Spotlight.outerCutOff);
+
+	m_shader.setBool("spotLight.drawFlag", Spotlight.drawFlag);
+
 }
 
 std::array<float, 28800> Surface::createSurface()

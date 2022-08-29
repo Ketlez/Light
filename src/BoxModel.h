@@ -61,8 +61,21 @@ public:
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
     -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
 	};
-	void draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::mat4 model, LightCubeModel::LightModel& lightModel, const float deltaTime);
+	void draw(
+        glm::mat4 viewMatrix, 
+        glm::mat4 projectionMatrix, 
+        glm::mat4 model, 
+        LightCubeModel::DirLightModel& Dirlight, 
+        LightCubeModel::PointLightModel* Pointlight,
+        int numberPointLight,
+        LightCubeModel::SpotLightModel& Spotlight,
+        glm::vec3 cameraPos,
+        const float deltaTime
+    );
 private:
+    void bindDirlight(LightCubeModel::DirLightModel& Dirlight);
+    void bindPointlight(LightCubeModel::PointLightModel* Pointlight, int i);
+    void bindSpotlight(LightCubeModel::SpotLightModel& Spotlight);
 	void drawStatic();
 	void bindTexture();
 	Texture textureDiffuse;

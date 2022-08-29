@@ -144,9 +144,13 @@ void Application::launchApp()
     //RubiksCube::Model cube(RubiksCube::ColorScheme());
     ModelCube::Model cube;
     Surface surface;
-    LightCubeModel::LightModel lightCube(glm::vec3(1.0f));
+    LightCubeModel::DirLightModel Dirlight;
+    int numberPointLight = 2;
+    LightCubeModel::PointLightModel Pointlight[2];
+    LightCubeModel::SpotLightModel Spotlight;
 
-    glm::vec3 lightPos(5.5f, 5.5f, 5.5f);
+    glm::vec4 PointlightPos1(-5.f, 4.f, 0.f, 1.f);
+    glm::vec4 PointlightPos2(5.f, 4.f, 0.f, 1.f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -157,7 +161,6 @@ void Application::launchApp()
 
 
         glClearColor(0.1f, 0.3f, 0.3f, 1.0f);
-        //glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glfwGetWindowSize(window, &w, &h);
@@ -167,33 +170,39 @@ void Application::launchApp()
 
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)w / (float)(h), 0.01f, 100.0f);
-        //glm::mat4 projection = glm::mat4(1.0f);
 
-        glm::mat4 lightModel = glm::mat4(1.0f);
-        //lightModel = glm::rotate(lightModel, float(glfwGetTime())*2.f, glm::vec3(0, 1, 0));
-        glm::vec4 lightPosRotate = lightModel * glm::vec4(lightPos, 1.f);
-        lightModel = glm::translate(lightModel, lightPos);
-        lightModel = glm::scale(lightModel, glm::vec3(0.1, 0.1, 0.1));
-
-        //lightCube.color.x = sin(glfwGetTime());
-        //lightCube.color.z = 1-sin(glfwGetTime());
-        //lightCube.color.y = cos(glfwGetTime());
-        lightCube.cameraPos = camera.Position;
-        lightCube.pos = lightPosRotate;
-
-        lightCube.draw(view, projection, lightModel, deltaTime);
+        glm::mat4 lightModel1 = glm::mat4(1.0f);
+        glm::vec3 lightPosRotate1 = glm::vec3(lightModel1 * PointlightPos1);
+        lightModel1 = glm::translate(lightModel1, glm::vec3(PointlightPos1));
+        lightModel1 = glm::scale(lightModel1, glm::vec3(0.1, 0.1, 0.1));
+        Pointlight[0].pos = lightPosRotate1;
+        glm::mat4 lightModel2 = glm::mat4(1.0f);
+        glm::vec3 lightPosRotate2 = glm::vec3(lightModel2 * PointlightPos2);
+        lightModel2 = glm::translate(lightModel2, glm::vec3(PointlightPos2));
+        lightModel2 = glm::scale(lightModel2, glm::vec3(0.1, 0.1, 0.1));
+        Pointlight[1].pos = lightPosRotate2;
 
         
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-2, 0, -2.5f));
+        Pointlight[0].draw(view, projection, lightModel1, deltaTime);
+        Pointlight[1].draw(view, projection, lightModel2, deltaTime);
 
+        Dirlight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
+        Spotlight.position = camera.Position;
+        Spotlight.direction = camera.Front;
+        
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0, 1, 0));
-        cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
+        cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
+        
+        //model = glm::translate(model, glm::vec3(4, 1, 2.5f));
+        //cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
+        //model = glm::translate(model, glm::vec3(-2, 1, 2.5f));
+        //cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
         
 
         glm::mat4 surfaceModel = glm::mat4(1.0f);
         //surfaceModel = glm::scale(surfaceModel, glm::vec3(0.5f));
-        surface.draw(view, projection, surfaceModel, lightCube, float(glfwGetTime()));
+        surface.draw(view, projection, surfaceModel, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
 
 
         glfwSwapBuffers(window);

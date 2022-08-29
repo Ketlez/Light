@@ -80,6 +80,11 @@ void Shader::setVec3(const std::string& name, glm::vec3 value) const
     glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
 }
 
+void Shader::setVec4(const std::string& name, glm::vec4 value) const
+{
+    glUniform4f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w);
+}
+
 void Shader::setMatrix4(const std::string& name, glm::mat4 trans) const
 {
     
