@@ -110,7 +110,7 @@ void ModelCube::Model::bindSpotlight(LightCubeModel::SpotLightModel& Spotlight)
 
 	m_shader.setBool("spotLight.drawFlag", Spotlight.drawFlag);
 
-}
+} 
 
 void ModelCube::Model::drawStatic()
 {

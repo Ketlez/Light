@@ -46,9 +46,17 @@ class Application
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
+
 	void SetCallbackFunctions(GLFWwindow* window);
 	
+
+
 public:
+
+
 	Application();
 	void launchApp();
+
+	float radius = 0.3f;
+	void collisionsResolve(const glm::mat4& model);
 };

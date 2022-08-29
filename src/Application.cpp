@@ -1,5 +1,5 @@
 #include "Application.h"
-
+#include <limits>
 
 void Application::processInput(GLFWwindow* window)
 {
@@ -192,6 +192,9 @@ void Application::launchApp()
         
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0, 1, 0));
+        model = glm::translate(model, glm::vec3(sin(currentFrame), 0, 0));
+        //model = glm::scale(model, glm::vec3(5, 5, 5));
+        collisionsResolve(model);
         cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
         
         //model = glm::translate(model, glm::vec3(4, 1, 2.5f));
@@ -209,4 +212,97 @@ void Application::launchApp()
         glfwPollEvents();
     }
     glfwTerminate();
+}
+
+void Application::collisionsResolve(const glm::mat4& model)
+{
+    glm::vec3 cubeMax(0.5f, 0.5f, 0.5f);
+    glm::vec3 cubeMin(-0.5f, -0.5f, -0.5f);
+    glm::vec3 Max = glm::vec3(model * glm::vec4(cubeMax, 1.f));
+    glm::vec3 Min = glm::vec3(model * glm::vec4(cubeMin, 1.f));
+    float clampX = glm::clamp(camera.Position.x, Min.x, Max.x);
+    float clampY = glm::clamp(camera.Position.y, Min.y, Max.y);
+    float clampZ = glm::clamp(camera.Position.z, Min.z, Max.z);
+
+    glm::vec3 clampXYZ(clampX, clampY, clampZ);
+
+    glm::vec3 vecRadius = clampXYZ - camera.Position;
+    float radiusLength = glm::length(vecRadius);
+    glm::vec3 oldCameraPos(camera.Position);
+    if (radiusLength < radius)
+    {
+        std::vector<int> resolveDim;
+        std::vector<bool> resolveIsPositive;
+        resolveDim.reserve(3);
+        resolveIsPositive.reserve(3);
+       // constexpr float epsilon = 1e-5f;
+        for (int j = 0; j < 3; j++)
+        {
+            
+            glm::vec3 center = (Max + Min) * 0.5f;
+            glm::vec3 dir = camera.Position - center;
+            int dim = 0;
+            float mindist = std::numeric_limits<float>::max();
+            for (int i = 0; i < 3; i++)
+            {
+                if (!(camera.Position[i]<Max[i] && camera.Position[i]>Min[i]) && (std::abs(dir[i])< mindist))
+                {
+                    mindist = std::abs(dir[i]);
+                    dim = i;
+
+                }
+
+            }
+            float result = dir[dim] > 0.f ? Max[dim] + radius : Min[dim] - radius;
+            if (camera.Position[dim] != result)
+            {
+                resolveDim.push_back(dim);
+                resolveIsPositive.push_back(dir[dim] > 0.f);
+            }
+            camera.Position[dim] = result;
+            
+        }
+        if (resolveDim.size() == 1)
+        {
+           // camera.Position[resolveDim[0]] += (resolveIsPositive[0] ? epsilon : -epsilon);
+            return;
+
+        }
+        if (resolveDim.size() == 2)
+        {
+            glm::vec3 edge(0.f);
+            int dim1 = resolveDim[0];
+            int dim2 = resolveDim[1];
+            edge[dim1] = resolveIsPositive[0] ? Max[dim1] : Min[dim1];
+            edge[dim2] = resolveIsPositive[1] ? Max[dim2] : Min[dim2];
+ 
+            glm::vec3 cameraPos(0.f);
+            cameraPos[dim1] = oldCameraPos[dim1];
+            cameraPos[dim2] = oldCameraPos[dim2];
+            glm::vec3 dir = glm::normalize(cameraPos - edge);
+            int dim3 = 3 - (dim1 + dim2);
+            
+            edge[dim3] = oldCameraPos[dim3];
+           
+            camera.Position = edge + dir * radius;
+        }
+        if (resolveDim.size() == 3)
+        {
+            glm::vec3 edge(0.f);
+            int dim1 = resolveDim[0];
+            int dim2 = resolveDim[1];
+            int dim3 = resolveDim[2];
+            edge[dim1] = resolveIsPositive[0] ? Max[dim1] : Min[dim1];
+            edge[dim2] = resolveIsPositive[1] ? Max[dim2] : Min[dim2];
+            edge[dim3] = resolveIsPositive[2] ? Max[dim3] : Min[dim3];
+
+            glm::vec3 cameraPos(0.f);
+            cameraPos[dim1] = oldCameraPos[dim1];
+            cameraPos[dim2] = oldCameraPos[dim2];
+            cameraPos[dim3] = oldCameraPos[dim3];
+            glm::vec3 dir = glm::normalize(cameraPos - edge);
+
+            camera.Position = edge + dir * radius;
+        }
+    }
 }
