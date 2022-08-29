@@ -214,8 +214,14 @@ void Application::launchApp()
     glfwTerminate();
 }
 
+static inline bool qFuzzyCompare(float p1, float p2)
+{
+    return (std::abs(p1 - p2) * 100000.f <= std::min(std::abs(p1), std::abs(p2)));
+}
+
 void Application::collisionsResolve(const glm::mat4& model)
 {
+
     glm::vec3 cubeMax(0.5f, 0.5f, 0.5f);
     glm::vec3 cubeMin(-0.5f, -0.5f, -0.5f);
     glm::vec3 Max = glm::vec3(model * glm::vec4(cubeMax, 1.f));
@@ -235,7 +241,7 @@ void Application::collisionsResolve(const glm::mat4& model)
         std::vector<bool> resolveIsPositive;
         resolveDim.reserve(3);
         resolveIsPositive.reserve(3);
-       // constexpr float epsilon = 1e-5f;
+       constexpr float epsilon = 1e-2f;
         for (int j = 0; j < 3; j++)
         {
             
@@ -245,7 +251,7 @@ void Application::collisionsResolve(const glm::mat4& model)
             float mindist = std::numeric_limits<float>::max();
             for (int i = 0; i < 3; i++)
             {
-                if (!(camera.Position[i]<Max[i] && camera.Position[i]>Min[i]) && (std::abs(dir[i])< mindist))
+                if (!(camera.Position[i]<Max[i] + epsilon && camera.Position[i]>Min[i] - epsilon) && (std::abs(dir[i])< mindist))
                 {
                     mindist = std::abs(dir[i]);
                     dim = i;
@@ -254,16 +260,21 @@ void Application::collisionsResolve(const glm::mat4& model)
 
             }
             float result = dir[dim] > 0.f ? Max[dim] + radius : Min[dim] - radius;
-            if (camera.Position[dim] != result)
+            
+            if (camera.Position[dim]!=result)
             {
+                
                 resolveDim.push_back(dim);
                 resolveIsPositive.push_back(dir[dim] > 0.f);
             }
             camera.Position[dim] = result;
             
         }
+
         if (resolveDim.size() == 1)
         {
+            static int i = 0;
+            std::cout << i++ << std::endl;
            // camera.Position[resolveDim[0]] += (resolveIsPositive[0] ? epsilon : -epsilon);
             return;
 
