@@ -188,7 +188,7 @@ void Surface::bindTexture()
 	unsigned char* data;
 
 	texture.bind();
-	data = stbi_load("texture/pol.jpg", &wihgt, &hight, &nrChannels, 0);
+	data = stbi_load("texture/trava.jpg", &wihgt, &hight, &nrChannels, 0);
 	texture.setData(GL_RGB, GL_RGB, GL_UNSIGNED_BYTE, wihgt, hight, data);
 	stbi_image_free(data);
 }

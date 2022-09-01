@@ -12,6 +12,7 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform mat3 normalModel;
 
+uniform float time;
 
 void main()
 {

@@ -1,5 +1,6 @@
 #include "Application.h"
 #include <limits>
+#include "ObjReader.h"
 
 void Application::processInput(GLFWwindow* window)
 {
@@ -25,6 +26,17 @@ void Application::scroll_callback(GLFWwindow* window, double xoffset, double yof
 
 void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    if (key == GLFW_KEY_J && action == GLFW_PRESS)
+    {
+        if(cursorActive)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        else
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+       
+        cursorActive = !cursorActive;
+    }
+
+
     if (key == GLFW_KEY_F && action == GLFW_PRESS)
     {
         if (fullsize)
@@ -39,6 +51,8 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
             glfwMaximizeWindow(window);
         }
     }
+
+
 
     if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS ||
         key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
@@ -75,14 +89,16 @@ void Application::mouse_callback(GLFWwindow* window, double xposIn, double yposI
         firstMouse = false;
     }
 
+
     float xoffset = xpos - lastX;
     float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 
     lastX = xpos;
     lastY = ypos;
 
+    if (cursorActive)
+        return;
     camera.ProcessMouseMovement(xoffset, yoffset);
-
 }
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -132,6 +148,22 @@ Application::Application(): window(NULL)
 		return;
 	}
 
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    std::string glslVersionStr = "#version " + std::to_string(130);
+    ImGui_ImplOpenGL3_Init(glslVersionStr.c_str());
+
     SetCallbackFunctions(window);
 }
 
@@ -140,20 +172,40 @@ void Application::launchApp()
 {
     int w, h;
 
-    //RubiksCube::ColorScheme Scheme;
-    //RubiksCube::Model cube(RubiksCube::ColorScheme());
-    ModelCube::Model cube;
+    ObjReader objModel;
+    
+
+    objModel.readFile("backpack.obj");
+    std::vector<float> vertices = objModel.createVertices();
+    
+    
+    ModelCube::Model cube(vertices.data(), vertices.size());
+   // ModelCube::Model cube(ModelCube::Model::defaultVertices.data(), ModelCube::Model::defaultVertices.size());
     Surface surface;
     LightCubeModel::DirLightModel Dirlight;
     int numberPointLight = 2;
     LightCubeModel::PointLightModel Pointlight[2];
     LightCubeModel::SpotLightModel Spotlight;
 
-    glm::vec4 PointlightPos1(-5.f, 4.f, 0.f, 1.f);
+    glm::vec4 PointlightPos1(0.f, 5.f, 0.f, 1.f);
     glm::vec4 PointlightPos2(5.f, 4.f, 0.f, 1.f);
+
+    float f = 0.005f;
 
     while (!glfwWindowShouldClose(window))
     {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        bool m_isDemoWindowOpened = true;
+        
+        if (cursorActive)
+        {
+            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::SliderFloat("float", &f, -0.1f, 10.1f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::End();
+        }
+
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -191,9 +243,10 @@ void Application::launchApp()
         Spotlight.direction = camera.Front;
         
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0, 1, 0));
-        model = glm::translate(model, glm::vec3(sin(currentFrame), 0, 0));
-        //model = glm::scale(model, glm::vec3(5, 5, 5));
+        //model = glm::rotate(model,  glm::radians(currentFrame*100), glm::vec3(0, 1, 0));
+        model = glm::translate(model, glm::vec3(0, 0, 0));
+        model = glm::scale(model, glm::vec3(f, f, f));
+        //model = glm::rotate(model,  glm::radians(-45.f), glm::vec3(0, 1, 0));
         collisionsResolve(model);
         cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
         
@@ -203,10 +256,12 @@ void Application::launchApp()
         //cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
         
 
-        glm::mat4 surfaceModel = glm::mat4(1.0f);
-        //surfaceModel = glm::scale(surfaceModel, glm::vec3(0.5f));
-        surface.draw(view, projection, surfaceModel, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
+        //glm::mat4 surfaceModel = glm::mat4(1.0f);
+        ////surfaceModel = glm::scale(surfaceModel, glm::vec3(0.5f));
+        //surface.draw(view, projection, surfaceModel, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
 
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -273,9 +328,6 @@ void Application::collisionsResolve(const glm::mat4& model)
 
         if (resolveDim.size() == 1)
         {
-            static int i = 0;
-            std::cout << i++ << std::endl;
-           // camera.Position[resolveDim[0]] += (resolveIsPositive[0] ? epsilon : -epsilon);
             return;
 
         }

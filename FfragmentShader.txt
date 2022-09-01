@@ -46,7 +46,8 @@ struct SpotLight {
 
 struct Material {
     sampler2D	diffuse;
-    sampler2D	specular;
+    sampler2D	specular
+    ;
     float		shininess;
 };
 
@@ -87,6 +88,8 @@ void main()
         result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
     
     FragColor = vec4(result, 1.0);
+
+     // FragColor = vec4(vec3(1,0,0), 1.0);
 	
 }
 

@@ -1,7 +1,10 @@
 #pragma once
 #include "GL_init.h"
 
-
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_stdlib.h"
 
 
 #include "Camera.h"
@@ -32,6 +35,7 @@ class Application
 
 	bool fullsize = false;
 	bool fullscreen = false;
+	bool cursorActive = false;
 
 	float deltaTime = 0.0f;	// time between current frame and last frame
 	float lastFrame = 0.0f;

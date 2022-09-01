@@ -1,13 +1,13 @@
 #include "BoxModel.h"
 #include <vector>
-ModelCube::Model::Model()
+ModelCube::Model::Model(const float* vertices, int size)
 	: m_shader("FvertexShader.txt", "FfragmentShader.txt")
 {
 	bindTexture();
-
+	this->sizeVertices = size / 8;
 	m_vao.bind();
 	m_vbo.bind();
-	m_vbo.setData(vertices.data(), sizeof(float)*vertices.size());
+	m_vbo.setData((void*)vertices, sizeof(float)*size);
 	m_vao.attribPointer(0, 3, GL_FLOAT, 8 * sizeof(float), 0);
 	m_vao.attribPointer(1, 3, GL_FLOAT, 8 * sizeof(float), 3 * sizeof(float));
 	m_vao.attribPointer(2, 2, GL_FLOAT, 8 * sizeof(float), 6 * sizeof(float));
@@ -115,23 +115,67 @@ void ModelCube::Model::bindSpotlight(LightCubeModel::SpotLightModel& Spotlight)
 void ModelCube::Model::drawStatic()
 {
 	
-	glDrawArrays(GL_TRIANGLES, 0, 972);
+	glDrawArrays(GL_TRIANGLES, 0, sizeVertices);
 }
 
 void ModelCube::Model::bindTexture()
 {
 	
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 	int wihgt, hight, nrChannels;
 	unsigned char* data;
 
 	textureDiffuse.bind();
-	data = stbi_load("texture/container2.png", &wihgt, &hight, &nrChannels, 0);
-	textureDiffuse.setData(GL_RGB, GL_RGBA, GL_UNSIGNED_BYTE, wihgt, hight, data);
+	data = stbi_load("texture/diffuse.jpg", &wihgt, &hight, &nrChannels, 0);
+	textureDiffuse.setData(GL_RGB, GL_RGB, GL_UNSIGNED_BYTE, wihgt, hight, data);
 	stbi_image_free(data);
 
 	textureSpecular.bind();
-	data = stbi_load("texture/container2_specular.png", &wihgt, &hight, &nrChannels, 0);
-	textureDiffuse.setData(GL_RGB, GL_RGBA, GL_UNSIGNED_BYTE, wihgt, hight, data);
+	data = stbi_load("texture/specular.jpg", &wihgt, &hight, &nrChannels, 0);
+	textureDiffuse.setData(GL_RGB, GL_RGB, GL_UNSIGNED_BYTE, wihgt, hight, data);
 	stbi_image_free(data);
 }
+
+const std::array<float, 288> ModelCube::Model::defaultVertices = {
+	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+	 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+};
