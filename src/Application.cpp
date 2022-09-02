@@ -172,15 +172,15 @@ void Application::launchApp()
 {
     int w, h;
 
-    ObjReader objModel;
+    //ObjReader objModel;
+    //
+    //
+    //objModel.readFile("backpack.obj");
+    //std::vector<float> vertices = objModel.createVertices();
     
-
-    objModel.readFile("backpack.obj");
-    std::vector<float> vertices = objModel.createVertices();
     
-    
-    ModelCube::Model cube(vertices.data(), vertices.size());
-   // ModelCube::Model cube(ModelCube::Model::defaultVertices.data(), ModelCube::Model::defaultVertices.size());
+    //ModelCube::Model cube(vertices.data(), vertices.size());
+    ModelCube::Model cube(ModelCube::Model::defaultVertices.data(), ModelCube::Model::defaultVertices.size());
     Surface surface;
     LightCubeModel::DirLightModel Dirlight;
     int numberPointLight = 2;
@@ -190,7 +190,7 @@ void Application::launchApp()
     glm::vec4 PointlightPos1(0.f, 5.f, 0.f, 1.f);
     glm::vec4 PointlightPos2(5.f, 4.f, 0.f, 1.f);
 
-    float f = 0.005f;
+    float f = 1.f;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -201,8 +201,8 @@ void Application::launchApp()
         
         if (cursorActive)
         {
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-            ImGui::SliderFloat("float", &f, -0.1f, 10.1f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::Begin("Hello, world!");                          
+            ImGui::SliderFloat("float", &f, 1.f, 10.1f);            
             ImGui::End();
         }
 
@@ -213,7 +213,9 @@ void Application::launchApp()
 
 
         glClearColor(0.1f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_STENCIL_TEST);
+        glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         glfwGetWindowSize(window, &w, &h);
         if (h == 0)
@@ -235,30 +237,41 @@ void Application::launchApp()
         Pointlight[1].pos = lightPosRotate2;
 
         
+        glStencilMask(0x00);
+
+        //Фонарики
         Pointlight[0].draw(view, projection, lightModel1, deltaTime);
         Pointlight[1].draw(view, projection, lightModel2, deltaTime);
+
+        //Пол
+        glm::mat4 surfaceModel = glm::mat4(1.0f); 
+        surface.draw(view, projection, surfaceModel, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
 
         Dirlight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
         Spotlight.position = camera.Position;
         Spotlight.direction = camera.Front;
         
-        glm::mat4 model = glm::mat4(1.0f);
-        //model = glm::rotate(model,  glm::radians(currentFrame*100), glm::vec3(0, 1, 0));
-        model = glm::translate(model, glm::vec3(0, 0, 0));
-        model = glm::scale(model, glm::vec3(f, f, f));
-        //model = glm::rotate(model,  glm::radians(-45.f), glm::vec3(0, 1, 0));
-        collisionsResolve(model);
-        cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
-        
-        //model = glm::translate(model, glm::vec3(4, 1, 2.5f));
-        //cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
-        //model = glm::translate(model, glm::vec3(-2, 1, 2.5f));
-        //cube.draw(view, projection, model, lightCube, float(glfwGetTime()));
-        
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
 
-        //glm::mat4 surfaceModel = glm::mat4(1.0f);
-        ////surfaceModel = glm::scale(surfaceModel, glm::vec3(0.5f));
-        //surface.draw(view, projection, surfaceModel, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()));
+        //Модель
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0, 1, 0));
+        model = glm::scale(model, glm::vec3(f, f, f));
+        //collisionsResolve(model);
+        cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()), false);
+
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+
+        model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));
+        cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()), true);
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glEnable(GL_DEPTH_TEST);
+
+        
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

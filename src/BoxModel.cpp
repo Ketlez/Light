@@ -27,7 +27,8 @@ void ModelCube::Model::draw(
 	int numberPointLight,
 	LightCubeModel::SpotLightModel& Spotlight,
 	glm::vec3 cameraPos,
-	const float time
+	const float time,
+	bool stencil = false
 )
 {
 	m_shader.use();
@@ -36,6 +37,8 @@ void ModelCube::Model::draw(
 	textureDiffuse.bind();
 	textureSpecular.activeTexture(1);
 	textureSpecular.bind();
+
+	m_shader.setInt("stencil", stencil);
 
 	m_shader.setInt("material.diffuse", 0);
 	m_shader.setInt("material.specular", 1);
@@ -126,13 +129,13 @@ void ModelCube::Model::bindTexture()
 	unsigned char* data;
 
 	textureDiffuse.bind();
-	data = stbi_load("texture/diffuse.jpg", &wihgt, &hight, &nrChannels, 0);
-	textureDiffuse.setData(GL_RGB, GL_RGB, GL_UNSIGNED_BYTE, wihgt, hight, data);
+	data = stbi_load("texture/container2.png", &wihgt, &hight, &nrChannels, 0);
+	textureDiffuse.setData(GL_RGB, GL_RGBA, GL_UNSIGNED_BYTE, wihgt, hight, data);
 	stbi_image_free(data);
 
 	textureSpecular.bind();
-	data = stbi_load("texture/specular.jpg", &wihgt, &hight, &nrChannels, 0);
-	textureDiffuse.setData(GL_RGB, GL_RGB, GL_UNSIGNED_BYTE, wihgt, hight, data);
+	data = stbi_load("texture/container2_specular.png", &wihgt, &hight, &nrChannels, 0);
+	textureDiffuse.setData(GL_RGB, GL_RGBA, GL_UNSIGNED_BYTE, wihgt, hight, data);
 	stbi_image_free(data);
 }
 

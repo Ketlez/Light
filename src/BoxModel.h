@@ -31,7 +31,8 @@ public:
         int numberPointLight,
         LightCubeModel::SpotLightModel& Spotlight,
         glm::vec3 cameraPos,
-        const float deltaTime
+        const float deltaTime,
+        bool stencil
     );
 private:
     int sizeVertices;
