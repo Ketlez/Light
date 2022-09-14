@@ -182,6 +182,7 @@ void Application::launchApp()
     //ModelCube::Model cube(vertices.data(), vertices.size());
     ModelCube::Model cube(ModelCube::Model::defaultVertices.data(), ModelCube::Model::defaultVertices.size());
     Surface surface;
+    BlendingTexture texture;
     LightCubeModel::DirLightModel Dirlight;
     int numberPointLight = 2;
     LightCubeModel::PointLightModel Pointlight[2];
@@ -213,9 +214,7 @@ void Application::launchApp()
 
 
         glClearColor(0.1f, 0.3f, 0.3f, 1.0f);
-        glEnable(GL_STENCIL_TEST);
-        glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glfwGetWindowSize(window, &w, &h);
         if (h == 0)
@@ -236,8 +235,7 @@ void Application::launchApp()
         lightModel2 = glm::scale(lightModel2, glm::vec3(0.1, 0.1, 0.1));
         Pointlight[1].pos = lightPosRotate2;
 
-        
-        glStencilMask(0x00);
+
 
         //Фонарики
         Pointlight[0].draw(view, projection, lightModel1, deltaTime);
@@ -251,8 +249,7 @@ void Application::launchApp()
         Spotlight.position = camera.Position;
         Spotlight.direction = camera.Front;
         
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glStencilMask(0xFF);
+        
 
         //Модель
         glm::mat4 model = glm::mat4(1.0f);
@@ -261,16 +258,12 @@ void Application::launchApp()
         //collisionsResolve(model);
         cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()), false);
 
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        glStencilMask(0x00);
-        glDisable(GL_DEPTH_TEST);
-
-        model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));
-        cube.draw(view, projection, model, Dirlight, Pointlight, numberPointLight, Spotlight, camera.Position, float(glfwGetTime()), true);
-        glStencilMask(0xFF);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glEnable(GL_DEPTH_TEST);
-
+       
+        //Трава
+        glm::mat4 modelTexture = glm::mat4(1.0f);
+        modelTexture = glm::translate(modelTexture, glm::vec3(0, 1, 1));
+        texture.draw(view, projection, modelTexture);
+        
         
 
         ImGui::Render();

@@ -87,8 +87,8 @@ void main()
             result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);   
         
         //spot light
-        if(spotLight.drawFlag)
-            result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
+       //if(spotLight.drawFlag)
+       //    result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
         
         FragColor = vec4(result, 1.0);
     } 

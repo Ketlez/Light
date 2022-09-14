@@ -78,6 +78,9 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\BlendingTexture.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -146,6 +149,9 @@
     <ClInclude Include="src\imgui\imstb_truetype.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="src\BlendingTexture.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="texture\d848b4d0b5e21b0869d32f22c2ec8cd1.jpg">
@@ -180,5 +186,7 @@
     <Text Include="LightVertexShader.txt" />
     <Text Include="SurfaceFragmentShader.txt" />
     <Text Include="SurfaceVertexShader.txt" />
+    <Text Include="FragmentShaderBlendingTexture.txt" />
+    <Text Include="VertexShaderBlendingTexture.txt" />
   </ItemGroup>
 </Project>
