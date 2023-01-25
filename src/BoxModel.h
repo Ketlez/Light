@@ -3,8 +3,8 @@
 #include <queue>
 
 #include "Shader.h"
-#include "VAO.h"
-#include "VBO.h"
+#include "buffers/VAO.h"
+#include "buffers/VBO.h"
 
 #include <array>
 #include "LightModel.h"

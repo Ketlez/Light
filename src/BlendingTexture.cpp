@@ -1,6 +1,6 @@
 #include "BlendingTexture.h"
 
-BlendingTexture::BlendingTexture() : m_shader("VertexShaderBlendingTexture.txt", "FragmentShaderBlendingTexture.txt")
+BlendingTexture::BlendingTexture() : m_shader("shaders/VertexShaderBlendingTexture.txt", "shaders/FragmentShaderBlendingTexture.txt")
 {
 	bindTexture();
 	

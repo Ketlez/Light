@@ -143,7 +143,7 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\BlendingTexture.cpp" />
-    <ClCompile Include="src\EBO.cpp" />
+    <ClCompile Include="src\buffers\EBO.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\GL_init.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
@@ -161,14 +161,14 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Surface.cpp" />
     <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\VAO.cpp" />
-    <ClCompile Include="src\VBO.cpp" />
+    <ClCompile Include="src\buffers\VAO.cpp" />
+    <ClCompile Include="src\buffers\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\BlendingTexture.h" />
     <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\EBO.h" />
+    <ClInclude Include="src\buffers\EBO.h" />
     <ClInclude Include="src\GL_init.h" />
     <ClInclude Include="src\imgui\imconfig.h" />
     <ClInclude Include="src\imgui\imgui.h" />
@@ -186,8 +186,8 @@
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Surface.h" />
     <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\VAO.h" />
-    <ClInclude Include="src\VBO.h" />
+    <ClInclude Include="src\buffers\VAO.h" />
+    <ClInclude Include="src\buffers\VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="texture\container2.png" />
@@ -202,14 +202,14 @@
     <None Include=".gitIgnore" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="FfragmentShader.txt" />
-    <Text Include="FvertexShader.txt" />
-    <Text Include="LightFragmentShader.txt" />
-    <Text Include="LightVertexShader.txt" />
-    <Text Include="FragmentShaderBlendingTexture.txt" />
-    <Text Include="VertexShaderBlendingTexture.txt" />
-    <Text Include="SurfaceFragmentShader.txt" />
-    <Text Include="SurfaceVertexShader.txt" />
+    <Text Include="shaders\FfragmentShader.txt" />
+    <Text Include="shaders\FvertexShader.txt" />
+    <Text Include="shaders\LightFragmentShader.txt" />
+    <Text Include="shaders\LightVertexShader.txt" />
+    <Text Include="shaders\FragmentShaderBlendingTexture.txt" />
+    <Text Include="shaders\VertexShaderBlendingTexture.txt" />
+    <Text Include="shaders\SurfaceFragmentShader.txt" />
+    <Text Include="shaders\SurfaceVertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

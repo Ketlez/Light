@@ -11,9 +11,9 @@
 
 #include "Shader.h"
 #include "Texture.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
+#include "buffers/VAO.h"
+#include "buffers/VBO.h"
+#include "buffers/EBO.h"
 #include <iostream>
 #include <string>
 #include <cmath>

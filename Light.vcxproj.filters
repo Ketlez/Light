@@ -18,7 +18,7 @@
     <ClCompile Include="src\Application.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\EBO.cpp">
+    <ClCompile Include="src\buffers\EBO.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\GL_init.cpp">
@@ -39,10 +39,10 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\VAO.cpp">
+    <ClCompile Include="src\buffers\VAO.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\VBO.cpp">
+    <ClCompile Include="src\buffers\VBO.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\LightModel.cpp">
@@ -89,7 +89,7 @@
     <ClInclude Include="src\Camera.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\EBO.h">
+    <ClInclude Include="src\buffers\EBO.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\GL_init.h">
@@ -107,10 +107,10 @@
     <ClInclude Include="src\Texture.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\VAO.h">
+    <ClInclude Include="src\buffers\VAO.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\VBO.h">
+    <ClInclude Include="src\buffers\VBO.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\LightModel.h">
@@ -180,13 +180,13 @@
     <None Include=".gitIgnore" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="FfragmentShader.txt" />
-    <Text Include="FvertexShader.txt" />
-    <Text Include="LightFragmentShader.txt" />
-    <Text Include="LightVertexShader.txt" />
-    <Text Include="SurfaceFragmentShader.txt" />
-    <Text Include="SurfaceVertexShader.txt" />
-    <Text Include="FragmentShaderBlendingTexture.txt" />
-    <Text Include="VertexShaderBlendingTexture.txt" />
+    <Text Include="shaders\FfragmentShader.txt" />
+    <Text Include="shaders\FvertexShader.txt" />
+    <Text Include="shaders\LightFragmentShader.txt" />
+    <Text Include="shaders\LightVertexShader.txt" />
+    <Text Include="shaders\SurfaceFragmentShader.txt" />
+    <Text Include="shaders\SurfaceVertexShader.txt" />
+    <Text Include="shaders\FragmentShaderBlendingTexture.txt" />
+    <Text Include="shaders\VertexShaderBlendingTexture.txt" />
   </ItemGroup>
 </Project>

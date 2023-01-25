@@ -1,7 +1,7 @@
 #include "BoxModel.h"
 #include <vector>
 ModelCube::Model::Model(const float* vertices, int size)
-	: m_shader("FvertexShader.txt", "FfragmentShader.txt")
+	: m_shader("shaders/FvertexShader.txt", "shaders/FfragmentShader.txt")
 {
 	bindTexture();
 	this->sizeVertices = size / 8;
