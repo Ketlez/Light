@@ -175,7 +175,7 @@ void Application::launchApp()
     ObjReader objModel;
     
 
-    objModel.readFile("backpack.obj");
+    objModel.readFile("obj/backpack.obj");
     std::vector<float> vertices = objModel.createVertices();
     
     

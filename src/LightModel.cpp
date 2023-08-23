@@ -16,7 +16,7 @@ void LightCubeModel::DirLightModel::updataPhong()
 }
 
 // PointLightModel
-LightCubeModel::PointLightModel::PointLightModel(): l_shader("LightVertexShader.txt", "LightFragmentShader.txt")
+LightCubeModel::PointLightModel::PointLightModel(): l_shader("shader/LightVertexShader.txt", "shader/LightFragmentShader.txt")
 {
 	vertices = {
 		-0.5f, -0.5f, -0.5f,

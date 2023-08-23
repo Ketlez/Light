@@ -1,7 +1,7 @@
 #include "Surface.h"
 
 Surface::Surface()
-	: m_shader("SurfaceVertexShader.txt", "SurfaceFragmentShader.txt")
+	: m_shader("shader/SurfaceVertexShader.txt", "shader/SurfaceFragmentShader.txt")
 {
 	bindTexture();
 	vertices = createSurface();
